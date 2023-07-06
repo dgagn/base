@@ -38,7 +38,13 @@ impl EmailClient {
 
         match &self.driver {
             EmailClientDriver::FileSystem { path } => {
-                FileTransport::new(path).send(&message).unwrap();
+                let id = FileTransport::new(path).send(&message)?;
+                tracing::info!(
+                    "Email sent {} to file transport with id {}",
+                    email.subject,
+                    id,
+                );
+
                 Ok(())
             }
         }
