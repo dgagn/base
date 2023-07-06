@@ -1,12 +1,8 @@
 use lettre::{message::header::ContentType, FileTransport, Message, Transport};
 use std::path::PathBuf;
 
-pub struct EmailClient {
-    driver: Box<dyn EmailDriver>,
-}
-
-pub enum EmailClientDriver {
-    FileSystem { path: PathBuf },
+pub struct EmailClient<D: EmailDriver> {
+    driver: D,
 }
 
 pub trait EmailDriver {
@@ -21,7 +17,11 @@ pub struct Email<'a> {
     pub body: &'a str,
 }
 
-impl EmailClient {
+impl<D: EmailDriver> EmailClient<D> {
+    pub fn new(driver: D) -> Self {
+        Self { driver }
+    }
+
     pub fn send(&self, email: &Email) -> anyhow::Result<()> {
         let message_id = uuid::Uuid::new_v4().to_string();
         let message = Message::builder()
@@ -78,9 +78,7 @@ mod tests {
         let driver = MockEmailDriver {
             transport: StubTransport::new_ok(),
         };
-        let client = EmailClient {
-            driver: Box::new(driver),
-        };
+        let client = EmailClient { driver };
         let email = Email {
             to: "test@localhost",
             subject: "Test email",
