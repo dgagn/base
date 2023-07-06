@@ -1,5 +1,5 @@
 use lettre::{message::header::ContentType, FileTransport, Message, Transport};
-use std::{env::current_dir, path::PathBuf};
+use std::path::PathBuf;
 
 pub struct EmailClient {
     driver: EmailClientDriver,
@@ -18,8 +18,7 @@ pub struct Email<'a> {
 
 impl EmailClient {
     pub fn new() -> Self {
-        let dir = current_dir().expect("Failed to get current directory");
-        let default_path = dir.join("storage/emails");
+        let default_path: PathBuf = "/tmp".into();
 
         Self {
             driver: EmailClientDriver::FileSystem { path: default_path },
