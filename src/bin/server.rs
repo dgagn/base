@@ -1,5 +1,4 @@
 use base::build_app;
-use base::email::{Email, EmailClient};
 use base::telemetry;
 use std::net::SocketAddr;
 
@@ -7,14 +6,6 @@ use std::net::SocketAddr;
 async fn main() {
     let _guard = telemetry::init();
 
-    let email_client = EmailClient::new();
-    let email = Email {
-        to: "ddanygagnon@gmail.com",
-        subject: "Hello from Rust",
-        body: "Hello from Rust",
-    };
-
-    email_client.send(&email).unwrap();
     let app = build_app();
 
     let addr = [127, 0, 0, 1];

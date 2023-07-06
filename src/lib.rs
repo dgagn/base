@@ -1,13 +1,10 @@
-pub mod email;
+pub mod handlers;
+pub mod notifications;
 pub mod telemetry;
 
 use axum::Router;
-use axum::{
-    extract::MatchedPath,
-    http::{Request, StatusCode},
-    routing::get,
-};
-use axum_macros::debug_handler;
+use axum::{extract::MatchedPath, http::Request, routing::get};
+use handlers::*;
 use tower_http::trace::TraceLayer;
 use tracing::info_span;
 
@@ -29,9 +26,4 @@ pub fn build_app() -> Router {
                 )
             }),
         )
-}
-
-#[debug_handler]
-pub async fn health_check() -> StatusCode {
-    StatusCode::OK
 }

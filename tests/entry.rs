@@ -1,9 +1,11 @@
 extern crate base;
+use base::telemetry;
 use std::net::{SocketAddr, TcpListener};
 
 mod handlers;
 
 pub async fn spawn_app() -> SocketAddr {
+    let _guard = telemetry::init();
     let app = base::build_app();
     let listener = TcpListener::bind("0.0.0.0:0").unwrap();
     let addr = listener.local_addr().unwrap();
